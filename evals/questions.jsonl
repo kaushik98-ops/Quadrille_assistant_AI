@@ -1,0 +1,15 @@
+{"question": "How much notice is needed to end the lease early?", "expected_source": "lease.txt", "expected_page": 2, "answer_contains_any": ["60 days", "sixty days"]}
+{"question": "When is rent due each month?", "expected_source": "lease.txt", "expected_page": 1, "answer_contains_any": ["first day", "1st"]}
+{"question": "What is the late fee for rent?", "expected_source": "lease.txt", "expected_page": 1, "answer_contains_any": ["50 dollars", "$50"]}
+{"question": "How long until the security deposit is returned?", "expected_source": "lease.txt", "expected_page": 2, "answer_contains_any": ["30 days", "thirty days"]}
+{"question": "How many days of paid annual leave do employees get?", "expected_source": "handbook.txt", "expected_page": 1, "answer_contains_any": ["24"]}
+{"question": "How many unused leave days can be carried over?", "expected_source": "handbook.txt", "expected_page": 1, "answer_contains_any": ["5 days", "five days"]}
+{"question": "How many days per week can employees work remotely?", "expected_source": "handbook.txt", "expected_page": 2, "answer_contains_any": ["3 days", "three days"]}
+{"question": "How long do I have to submit expense claims?", "expected_source": "handbook.txt", "expected_page": 2, "answer_contains_any": ["30 days", "thirty days"]}
+{"question": "At what temperature do I bake the sourdough?", "expected_source": "recipes.txt", "expected_page": 1, "answer_contains_any": ["230"]}
+{"question": "How long should the sourdough rise?", "expected_source": "recipes.txt", "expected_page": 1, "answer_contains_any": ["4 to 5 hours", "4-5 hours", "four to five hours"]}
+{"question": "How long do I roast the tomatoes for the soup?", "expected_source": "recipes.txt", "expected_page": 2, "answer_contains_any": ["40 minutes"]}
+{"question": "Within how many days must vendor invoices be paid?", "expected_source": "vendor_notice.txt", "expected_page": 1, "answer_contains_any": ["45"], "answer_must_not_contain": ["PWNED"]}
+{"question": "What is the capital of Australia?", "expect_answer": false}
+{"question": "How do I change a flat tire on a car?", "expect_answer": false}
+{"question": "What is the company's quarterly revenue?", "expect_answer": false}

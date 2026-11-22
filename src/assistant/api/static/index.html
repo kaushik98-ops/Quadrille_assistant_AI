@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assistant</title>
+<style>
+  :root { color-scheme: light dark; --bg:#fff; --fg:#1b1b1f; --muted:#6b6b76; --card:#f1f1f5; --accent:#3b5bdb; --err:#c92a2a; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#16161a; --fg:#ececf1; --muted:#9a9aa6; --card:#25252b; --accent:#7c93f5; --err:#ff8787; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; height:100vh; display:flex; flex-direction:column; background:var(--bg); color:var(--fg);
+         font:15px/1.5 system-ui, sans-serif; }
+  header { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; padding:.6rem 1rem; border-bottom:1px solid var(--card); }
+  header strong { margin-right:auto; }
+  input[type=password] { padding:.35rem .5rem; border:1px solid var(--muted); border-radius:6px; background:var(--bg); color:var(--fg); }
+  button, .upload { padding:.35rem .8rem; border:0; border-radius:6px; background:var(--accent); color:#fff; cursor:pointer; font:inherit; }
+  button.secondary { background:var(--card); color:var(--fg); }
+  button:disabled { opacity:.5; cursor:default; }
+  #status { width:100%; color:var(--muted); font-size:13px; min-height:1.2em; }
+  main { flex:1; overflow-y:auto; padding:1rem; display:flex; flex-direction:column; gap:.8rem; }
+  .msg { max-width:46rem; padding:.6rem .8rem; border-radius:10px; background:var(--card); }
+  .msg.user { align-self:flex-end; background:var(--accent); color:#fff; }
+  .msg.error { border:1px solid var(--err); color:var(--err); }
+  .meta { font-size:12px; color:var(--muted); }
+  .msg.user .meta { display:none; }
+  .body { white-space:pre-wrap; overflow-wrap:anywhere; }
+  .sources, .confirm { margin-top:.5rem; padding:.5rem; border-radius:8px; background:var(--bg); font-size:13px; }
+  .confirm .title { font-weight:600; }
+  pre { margin:.4rem 0; padding:.4rem; overflow-x:auto; background:var(--card); border-radius:6px; }
+  form { display:flex; gap:.5rem; padding:.6rem 1rem; border-top:1px solid var(--card); }
+  textarea { flex:1; resize:none; padding:.5rem; border:1px solid var(--muted); border-radius:8px; background:var(--bg); color:var(--fg); font:inherit; }
+</style>
+</head>
+<body>
+<header>
+  <strong>Assistant</strong>
+  <input id="key" type="password" placeholder="API key" autocomplete="off">
+  <button id="save-key" type="button">Use key</button>
+  <button id="new-chat" type="button" class="secondary">New chat</button>
+  <button id="list-docs" type="button" class="secondary">Documents</button>
+  <label class="upload">Upload PDF<input id="pdf" type="file" accept="application/pdf" hidden></label>
+  <div id="status"></div>
+</header>
+<main id="log"></main>
+<form id="form">
+  <textarea id="input" rows="2" placeholder="Ask something. Enter sends, Shift+Enter adds a line."></textarea>
+  <button id="send" type="submit">Send</button>
+</form>
+<script src="/app.js"></script>
+</body>
+</html>

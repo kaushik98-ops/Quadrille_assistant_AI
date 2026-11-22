@@ -1,0 +1,11 @@
+{$DOMAIN:localhost} {
+	# Slightly above MAX_UPLOAD_MB (default 20) so the app returns the friendly error
+	request_body {
+		max_size 25MB
+	}
+
+	reverse_proxy app:8000 {
+		# Send streamed (SSE) tokens immediately instead of buffering them
+		flush_interval -1
+	}
+}

@@ -1,0 +1,88 @@
+name: assistant-platform
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  chroma:
+    image: chromadb/chroma:${CHROMA_VERSION:?Set CHROMA_VERSION in .env (see .env.example)}
+    restart: unless-stopped
+    environment:
+      IS_PERSISTENT: "TRUE"
+      PERSIST_DIRECTORY: /data
+      ANONYMIZED_TELEMETRY: "FALSE"
+    volumes:
+      - chroma_data:/data
+    # No "ports:" on purpose. Chroma has no authentication by default, so it must only be
+    # reachable from other containers on this Compose network.
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8000' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    logging: *logging
+
+  app:
+    build:
+      context: .
+      args:
+        CHROMA_VERSION: ${CHROMA_VERSION:?Set CHROMA_VERSION in .env (see .env.example)}
+    image: assistant-platform:local
+    init: true
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # These override whatever .env says, because they only make sense inside Docker.
+      API_HOST: 0.0.0.0
+      API_PORT: "8000"
+      CHROMA_HOST: chroma
+      CHROMA_PORT: "8000"
+      AGENT_MCP_URL: ""   # the agent starts its own MCP server subprocess inside the container
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL_DOCKER:-http://host.docker.internal:11434}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # makes host.docker.internal work on Linux too
+    ports:
+      - "127.0.0.1:${APP_PORT:-8000}:8000"    # localhost only; use the tls profile to expose it
+    volumes:
+      - app_data:/app/data                    # SQLite, uploaded PDFs, the read_file sandbox
+      - model_cache:/home/app/.cache          # the local embedding model
+    depends_on:
+      chroma:
+        condition: service_healthy
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256            # a runaway process can't fork forever
+    # mem_limit: 2g            # optional: cap memory (the local embedding model needs roughly 1 GB)
+    # read_only: true          # optional: immutable root filesystem. Also add the tmpfs line below,
+    # tmpfs: ["/tmp:size=256m"]  # then check `docker compose logs app` for write errors.
+    logging: *logging
+
+  # Optional HTTPS in front of the app:  docker compose --profile tls up -d
+  caddy:
+    image: caddy:2
+    profiles: ["tls"]
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    logging: *logging
+
+volumes:
+  app_data:
+  chroma_data:
+  model_cache:
+  caddy_data:
+  caddy_config:

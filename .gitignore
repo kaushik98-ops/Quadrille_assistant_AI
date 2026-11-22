@@ -1,0 +1,34 @@
+# Secrets and local config
+.env
+.env.*
+!.env.example
+secrets/
+
+# Runtime data (keep the folders, not the contents)
+data/pdfs/*
+data/sandbox/*
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/chroma/
+!data/pdfs/.gitkeep
+!data/sandbox/.gitkeep
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

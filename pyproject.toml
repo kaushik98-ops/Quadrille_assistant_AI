@@ -1,0 +1,60 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "assistant-platform"
+version = "0.1.0"
+description = "A personal AI assistant that answers from your own PDFs and runs a few safe, approval-gated tools: chat, RAG, agent and MCP server behind one API."
+readme = "README.md"
+license = { text = "MIT" }
+license-files = ["LICENSE"]
+authors = [{ name = "Kaushik Sarkar" }]
+keywords = ["llm", "rag", "agent", "mcp", "langgraph", "fastapi", "chromadb"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic-settings>=2.2",
+    "anthropic>=0.40",
+    "openai>=1.50",
+    "httpx>=0.27",
+    "pypdf>=4.0",
+    "chromadb>=0.5",
+    "mcp>=1.9,<2",
+    "ddgs>=9.0",
+    "langgraph>=0.4",
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/assistant"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+src = ["src", "tests", "scripts", "evals"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "ISC"]
+ignore = [
+    "B008",   # FastAPI's Depends() in argument defaults is the documented pattern
+    "E501",   # long lines are mostly prompt strings; the formatter-free codebase keeps them readable
+    "UP042",  # str+Enum is kept on purpose: StrEnum changes str() behaviour
+    "B905",   # zip() lengths are known equal at these call sites
+]
